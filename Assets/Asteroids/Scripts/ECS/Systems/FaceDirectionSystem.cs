@@ -5,7 +5,7 @@ using Unity.Transforms;
 public class FaceDirectionSystem : SystemBase {
     protected override void OnUpdate() {
 
-        Entities.ForEach((ref Translation position, ref Rotation rotation, in MovementData movementData) => {
+        Entities.ForEach((ref Rotation rotation, in MovementData movementData) => {
 
             if(!movementData.Direction.Equals(float3.zero)) {
                 quaternion targetRotation = quaternion.LookRotationSafe(movementData.Direction, math.up());
