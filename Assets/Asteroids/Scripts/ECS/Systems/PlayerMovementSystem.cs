@@ -1,7 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 public class PlayerMovementSystem : SystemBase {
     protected override void OnUpdate()
@@ -12,15 +11,16 @@ public class PlayerMovementSystem : SystemBase {
             
             if (playerMovementData.InputRotation != 0f)
             {
+                quaternion oldRotation = rotation.Value;
                 quaternion rotationToAdd = quaternion.EulerXYZ(playerMovementData.RotationSpeed *
                                                                playerMovementData.InputRotation * deltaTime * math.up());
-
-                quaternion oldRotation = rotation.Value;
+                
                 quaternion targetRotation = math.mul(oldRotation, rotationToAdd);
 
                 rotation.Value = targetRotation;
-                movementData.Forward = math.forward(rotation.Value);
             }
+            
+            movementData.Forward = math.forward(rotation.Value);
             
             if (playerMovementData.ThrustersOn)
             {

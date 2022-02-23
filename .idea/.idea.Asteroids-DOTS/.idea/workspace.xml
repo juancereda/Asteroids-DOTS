@@ -20,8 +20,10 @@
     <setting file="file://$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/ConstantRotationSystem.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@1.2.1/Unity.Mathematics/quaternion.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Data/ProjectilePrefabData.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@0.17.0-preview.42/Unity.Entities/EntityCommandBufferSystem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@1.2.1/Unity.Mathematics/random.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/BattlefieldLimitsSystem.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@0.17.0-preview.42/Unity.Entities/EntityCommandBuffer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@0.17.0-preview.42/Unity.Transforms/Translation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/ShootingSystem.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -41,14 +43,16 @@
         <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Data/ShootingData.cs" />
         <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Data/InputData.cs" />
         <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Data/FaceDirectionData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/PlayerInputSystem.cs" />
         <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/FaceDirectionSystem.cs" />
-        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Data/PlayerMovementData.cs" />
         <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Data/MovementData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/PlayerMovementSystem.cs" />
-        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Data/ProjectileData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/ShootingSystem.cs" />
         <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/AsteroidsSpawnerSystem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/MoveForwardSystem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/PlayerInputSystem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Data/PlayerMovementData.cs" />
+        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Data/ProjectileData.cs" />
+        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/ProjectileSystem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/PlayerMovementSystem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Asteroids/Scripts/ECS/Systems/ShootingSystem.cs" />
       </list>
     </option>
   </component>
@@ -91,7 +95,7 @@
       <option name="presentableId" value="Default" />
       <updated>1645490489200</updated>
       <workItem from="1645490522769" duration="10878000" />
-      <workItem from="1645567770230" duration="9821000" />
+      <workItem from="1645567770230" duration="15253000" />
     </task>
     <servers />
   </component>
@@ -101,6 +105,10 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="-1904" y="0" width="1534" height="732" key="dock-window-1" timestamp="1645583359094">
+      <screen x="-1920" y="0" width="1536" height="832" />
+    </state>
+    <state x="-1904" y="0" width="1534" height="732" key="dock-window-1/-1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1645583359094" />
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1645492437881">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
