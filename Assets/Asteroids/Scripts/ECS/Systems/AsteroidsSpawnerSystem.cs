@@ -29,6 +29,7 @@ public class AsteroidsSpawnerSystem : SystemBase
 
                 EntityManager.SetComponentData(newAsteroid, new Translation {Value = asteroidPosition});
                 EntityManager.SetComponentData(newAsteroid, new AsteroidData() { Size = asteroidSize});
+                EntityManager.AddComponent<NonUniformScale>(newAsteroid);
                 EntityManager.SetComponentData(newAsteroid, 
                     new NonUniformScale{ Value = new float3(asteroidSize * 0.5f)});
                 EntityManager.SetComponentData(newAsteroid, 
