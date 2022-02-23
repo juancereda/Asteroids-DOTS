@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 3574194075633532655}
   - component: {fileID: 604939157639284382}
   - component: {fileID: 6362837092380087340}
+  - component: {fileID: 627737233624000732}
   - component: {fileID: 2285200905039558420}
   - component: {fileID: 8451492302141581090}
   - component: {fileID: 2365073727044739772}
   - component: {fileID: 1380947828061094064}
   - component: {fileID: 4757355584821294773}
-  - component: {fileID: 627737233624000732}
   m_Layer: 0
   m_Name: Asteroid
   m_TagString: Enemy
@@ -87,6 +87,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &627737233624000732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3574194075633771295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0528fc18faad1624e9f7bd66aa13f8bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2285200905039558420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,15 +343,3 @@ MonoBehaviour:
     Tag05: 0
     Tag06: 0
     Tag07: 0
---- !u!114 &627737233624000732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3574194075633771295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0528fc18faad1624e9f7bd66aa13f8bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

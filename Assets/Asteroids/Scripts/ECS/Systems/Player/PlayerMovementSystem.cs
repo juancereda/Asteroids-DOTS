@@ -4,24 +4,28 @@ using Unity.Transforms;
 
 public class PlayerMovementSystem : SystemBase
 {
-    private BeginInitializationEntityCommandBufferSystem _endSimulationCommandBufferSystem;
+    private BeginInitializationEntityCommandBufferSystem _beginInitEntityCommandBufferSystem;
 
     protected override void OnCreate()
     {
-        _endSimulationCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
+        _beginInitEntityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
     }
 
     protected override void OnUpdate()
     {
         float deltaTime = Time.DeltaTime;
-        var endCommandBuffer = _endSimulationCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+        var beginCommandBuffer = _beginInitEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
 
         Entities.ForEach((Entity entity,
             int entityInQueryIndex,
             ref Rotation rotation,
             ref MovementData movementData,
-            in PlayerMovementData playerMovementData) =>
+            in PlayerMovementData playerMovementData,
+            in PlayerHealthData playerHealthData) =>
         {
+            if (playerHealthData.Status == PlayerHealthData.PlayerStatus.Respawning)
+                return;
+            
             if (playerMovementData.InputRotation != 0f)
             {
                 quaternion oldRotation = rotation.Value;
@@ -41,15 +45,15 @@ public class PlayerMovementSystem : SystemBase
                 movementData.Direction =
                     math.normalizesafe(movementData.Direction +
                                        (movementData.Forward * playerMovementData.ThrustersForce * deltaTime));
-                endCommandBuffer.RemoveComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
+                beginCommandBuffer.RemoveComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
             }
             else
             {
-                endCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
+                beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
             }
             
         }).ScheduleParallel();
         
-        _endSimulationCommandBufferSystem.AddJobHandleForProducer(Dependency);
+        _beginInitEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
     }
 }

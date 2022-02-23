@@ -9,7 +9,9 @@ public class BattlefieldLimitsSystem : SystemBase
         float _xLimit = 22.5f;
         float _zLimit = 12.5f;
         
-        Entities.ForEach((ref Translation translation, in MovementData movementData) =>
+        Entities
+            .WithAny<MovementData>()
+            .ForEach((ref Translation translation) =>
         {
             if (translation.Value.x > _xLimit)
             {

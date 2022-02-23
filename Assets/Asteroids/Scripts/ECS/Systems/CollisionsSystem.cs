@@ -2,6 +2,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
@@ -25,7 +26,7 @@ public class CollisionsSystem : JobComponentSystem
     [BurstCompile]
     struct CollisionsSystemJob : ITriggerEventsJob
     {
-        [ReadOnly] public ComponentDataFromEntity<PlayerTag> AllPlayers;
+        [ReadOnly] public ComponentDataFromEntity<PlayerHealthData> AllPlayersHealthData;
         [ReadOnly] public ComponentDataFromEntity<AsteroidData> AllAsteroidsData;
         [ReadOnly] public ComponentDataFromEntity<ProjectileTag> AllProjectiles;
         [ReadOnly] public ComponentDataFromEntity<Translation> AllTranslationData;
@@ -41,31 +42,40 @@ public class CollisionsSystem : JobComponentSystem
             //
             if (AllAsteroidsData.HasComponent(entityA) && AllProjectiles.HasComponent(entityB))
             {
-                CollisionBetweenAsteroidAndProjectile(ref EntityCommandBuffer, ref AllAsteroidsData, ref AllTranslationData, 
-                    projectile: entityB, asteroid: entityA);
+                CollisionBetweenAsteroidAndProjectile(ref EntityCommandBuffer, 
+                    asteroidSize: AllAsteroidsData[entityA].Size, 
+                    asteroidPosition: AllTranslationData[entityA].Value, 
+                    projectile: entityB, 
+                    asteroid: entityA);
             }
             else if (AllAsteroidsData.HasComponent(entityB) && AllProjectiles.HasComponent(entityA))
             {
-                CollisionBetweenAsteroidAndProjectile(ref EntityCommandBuffer, ref AllAsteroidsData, ref AllTranslationData, 
-                    projectile: entityA, asteroid: entityB);
+                CollisionBetweenAsteroidAndProjectile(ref EntityCommandBuffer, 
+                    asteroidSize: AllAsteroidsData[entityA].Size, 
+                    asteroidPosition: AllTranslationData[entityA].Value, 
+                    projectile: entityA, 
+                    asteroid: entityB);
             }
             
             
             // Collision between Player and Asteroids
             //
-            if (AllAsteroidsData.HasComponent(entityA) && AllPlayers.HasComponent(entityB))
+            if (AllAsteroidsData.HasComponent(entityA) && AllPlayersHealthData.HasComponent(entityB))
             {
+                CollisionBetweenAsteroidAndPlayer(ref EntityCommandBuffer, ref AllPlayersHealthData, player: entityB);
             }
-            else if (AllAsteroidsData.HasComponent(entityB) && AllPlayers.HasComponent(entityA))
+            else if (AllAsteroidsData.HasComponent(entityB) && AllPlayersHealthData.HasComponent(entityA))
             {
+                CollisionBetweenAsteroidAndPlayer(ref EntityCommandBuffer, ref AllPlayersHealthData, player: entityA);
             }
             
             
 
+            // - Local methods section -
             static void CollisionBetweenAsteroidAndProjectile(
                 ref EntityCommandBuffer commandBuffer, 
-                ref ComponentDataFromEntity<AsteroidData> allAsteroidsData,
-                ref ComponentDataFromEntity<Translation> allTranslationsData,
+                int asteroidSize,
+                float3 asteroidPosition,
                 Entity projectile, 
                 Entity asteroid)
             {
@@ -73,12 +83,23 @@ public class CollisionsSystem : JobComponentSystem
                 commandBuffer.AddComponent(asteroidDestroyed,
                     new AsteroidDestroyedData
                     {
-                        Size = allAsteroidsData[asteroid].Size,
-                        Position = allTranslationsData[asteroid].Value
+                        Size = asteroidSize,
+                        Position = asteroidPosition
                     });
                 
                 commandBuffer.DestroyEntity(asteroid); // Destroying Asteroid
                 commandBuffer.DestroyEntity(projectile); // Destroying Projectile
+            }
+            
+            static void CollisionBetweenAsteroidAndPlayer(
+                ref EntityCommandBuffer commandBuffer,
+                ref ComponentDataFromEntity<PlayerHealthData> allPlayersHealthData,
+                Entity player)
+            {
+                if (!allPlayersHealthData[player].IsUntouchable)
+                {
+                    commandBuffer.AddComponent(player, new PlayerGotHitData());
+                }
             }
         }
     }
@@ -87,7 +108,7 @@ public class CollisionsSystem : JobComponentSystem
     {
         var job = new CollisionsSystemJob();
         job.AllAsteroidsData = GetComponentDataFromEntity<AsteroidData>(true);
-        job.AllPlayers = GetComponentDataFromEntity<PlayerTag>(true);
+        job.AllPlayersHealthData = GetComponentDataFromEntity<PlayerHealthData>(true);
         job.AllProjectiles = GetComponentDataFromEntity<ProjectileTag>(true);
         job.AllTranslationData = GetComponentDataFromEntity<Translation>(true);
         job.EntityCommandBuffer = _endSimulationCommandBufferSystem.CreateCommandBuffer();

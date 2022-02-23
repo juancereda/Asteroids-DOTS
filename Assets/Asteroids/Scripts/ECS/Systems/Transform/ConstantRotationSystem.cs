@@ -8,8 +8,7 @@ public class ConstantRotationSystem : SystemBase
     {
         float deltaTime = Time.DeltaTime;
 
-        Entities.ForEach((ref Rotation rotation, in AsteroidData asteroidFilter, 
-            in ConstantRotationData constantRotationData) =>
+        Entities.ForEach((ref Rotation rotation, in ConstantRotationData constantRotationData) =>
         {
             quaternion rotationToAdd =
                 quaternion.EulerXYZ(constantRotationData.Angle * constantRotationData.Speed * deltaTime);

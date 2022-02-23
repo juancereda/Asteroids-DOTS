@@ -9,6 +9,4 @@ public struct InputData : IComponentData
     public KeyCode RightKey;
     public KeyCode ShootKey;
     public KeyCode ThrustersKey;
-
-    public float3 ProcessedDirection;
 }
