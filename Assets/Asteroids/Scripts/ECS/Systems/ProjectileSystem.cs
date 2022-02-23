@@ -2,11 +2,11 @@ using Unity.Entities;
 
 public class ProjectileSystem : SystemBase
 {
-    private BeginInitializationEntityCommandBufferSystem _entityCommandBufferSystem;
+    private EndSimulationEntityCommandBufferSystem _entityCommandBufferSystem;
     
     protected override void OnCreate()
     {
-        _entityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
+        _entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
     }
     
     protected override void OnUpdate()

@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Unity.Transforms;
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 [UpdateAfter(typeof(EndFramePhysicsSystem))]
@@ -25,8 +26,9 @@ public class CollisionsSystem : JobComponentSystem
     struct CollisionsSystemJob : ITriggerEventsJob
     {
         [ReadOnly] public ComponentDataFromEntity<PlayerTag> AllPlayers;
-        [ReadOnly] public ComponentDataFromEntity<AsteroidTag> AllAsteroids;
+        [ReadOnly] public ComponentDataFromEntity<AsteroidData> AllAsteroidsData;
         [ReadOnly] public ComponentDataFromEntity<ProjectileTag> AllProjectiles;
+        [ReadOnly] public ComponentDataFromEntity<Translation> AllTranslationData;
 
         public EntityCommandBuffer EntityCommandBuffer;
         
@@ -35,16 +37,48 @@ public class CollisionsSystem : JobComponentSystem
             Entity entityA = triggerEvent.EntityA;
             Entity entityB = triggerEvent.EntityB;
 
-            if (AllAsteroids.HasComponent(entityA) && AllProjectiles.HasComponent(entityB))
+            // Collision between Asteroids and Projectile
+            //
+            if (AllAsteroidsData.HasComponent(entityA) && AllProjectiles.HasComponent(entityB))
             {
-                EntityCommandBuffer.DestroyEntity(entityA);
-                EntityCommandBuffer.DestroyEntity(entityB);
+                CollisionBetweenAsteroidAndProjectile(ref EntityCommandBuffer, ref AllAsteroidsData, ref AllTranslationData, 
+                    projectile: entityB, asteroid: entityA);
+            }
+            else if (AllAsteroidsData.HasComponent(entityB) && AllProjectiles.HasComponent(entityA))
+            {
+                CollisionBetweenAsteroidAndProjectile(ref EntityCommandBuffer, ref AllAsteroidsData, ref AllTranslationData, 
+                    projectile: entityA, asteroid: entityB);
             }
             
-            else if (AllAsteroids.HasComponent(entityB) && AllProjectiles.HasComponent(entityA))
+            
+            // Collision between Player and Asteroids
+            //
+            if (AllAsteroidsData.HasComponent(entityA) && AllPlayers.HasComponent(entityB))
             {
-                EntityCommandBuffer.DestroyEntity(entityA);
-                EntityCommandBuffer.DestroyEntity(entityB);
+            }
+            else if (AllAsteroidsData.HasComponent(entityB) && AllPlayers.HasComponent(entityA))
+            {
+            }
+            
+            
+
+            static void CollisionBetweenAsteroidAndProjectile(
+                ref EntityCommandBuffer commandBuffer, 
+                ref ComponentDataFromEntity<AsteroidData> allAsteroidsData,
+                ref ComponentDataFromEntity<Translation> allTranslationsData,
+                Entity projectile, 
+                Entity asteroid)
+            {
+                Entity asteroidDestroyed = commandBuffer.CreateEntity();
+                commandBuffer.AddComponent(asteroidDestroyed,
+                    new AsteroidDestroyedData
+                    {
+                        Size = allAsteroidsData[asteroid].Size,
+                        Position = allTranslationsData[asteroid].Value
+                    });
+                
+                commandBuffer.DestroyEntity(asteroid); // Destroying Asteroid
+                commandBuffer.DestroyEntity(projectile); // Destroying Projectile
             }
         }
     }
@@ -52,9 +86,10 @@ public class CollisionsSystem : JobComponentSystem
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var job = new CollisionsSystemJob();
-        job.AllAsteroids = GetComponentDataFromEntity<AsteroidTag>(true);
+        job.AllAsteroidsData = GetComponentDataFromEntity<AsteroidData>(true);
         job.AllPlayers = GetComponentDataFromEntity<PlayerTag>(true);
         job.AllProjectiles = GetComponentDataFromEntity<ProjectileTag>(true);
+        job.AllTranslationData = GetComponentDataFromEntity<Translation>(true);
         job.EntityCommandBuffer = _endSimulationCommandBufferSystem.CreateCommandBuffer();
 
         JobHandle jobHandle =

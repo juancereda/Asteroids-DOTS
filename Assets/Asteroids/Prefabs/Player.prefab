@@ -75,7 +75,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  Speed: 10
+  Speed: 4
   Forward:
     x: 0
     y: 0

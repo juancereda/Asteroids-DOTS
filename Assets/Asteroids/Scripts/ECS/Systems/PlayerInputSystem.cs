@@ -10,7 +10,7 @@ public class PlayerInputSystem : SystemBase {
             bool leftKeyPressed = Input.GetKey(inputData.LeftKey);
             bool rightKeyPressed = Input.GetKey(inputData.RightKey);
             bool shootingKeyPressed = Input.GetKey(inputData.ShootKey);
-            bool thrustersKeyPressed = Input.GetKeyDown(inputData.ThrustersKey);
+            bool thrustersKeyPressed = Input.GetKey(inputData.ThrustersKey);
 
             float inputRotation = 0f;
             inputRotation = rightKeyPressed ? 1.0f : 0.0f;
