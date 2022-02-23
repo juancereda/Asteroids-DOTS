@@ -20,18 +20,13 @@ public class PlayerHealthSystem : SystemBase {
         
         
         Entities.WithAny<PlayerGotHitData>().
-            ForEach((Entity entity, int entityInQueryIndex, ref PlayerHealthData playerHealthData, 
-            ref Translation translation, ref MovementData movementData, ref Rotation rotation) =>
+            ForEach((Entity entity, int entityInQueryIndex, ref PlayerHealthData playerHealthData) =>
         {
             if (playerHealthData.Status == PlayerHealthData.PlayerStatus.Alive)
             {
                 playerHealthData.Status = PlayerHealthData.PlayerStatus.Respawning;
                 playerHealthData.RespawnTimer = playerHealthData.SecondsToRespawn;
-                translation.Value = float3.zero;
-                movementData.Direction = float3.zero;
-                movementData.Forward = float3.zero;
-                rotation.Value = quaternion.LookRotationSafe(float3.zero, math.up());
-                
+
                 beginCommandBuffer.AddComponent<DisableRendering>(entityInQueryIndex, entity);
             }
             
@@ -40,7 +35,8 @@ public class PlayerHealthSystem : SystemBase {
         
         
         
-        Entities.ForEach((Entity entity, int entityInQueryIndex, ref PlayerHealthData playerHealthData) => {
+        Entities.ForEach((Entity entity, int entityInQueryIndex, ref PlayerHealthData playerHealthData,
+            ref Translation translation, ref MovementData movementData, ref Rotation rotation) => {
 
             if (playerHealthData.Status == PlayerHealthData.PlayerStatus.Respawning)
             {
@@ -50,6 +46,11 @@ public class PlayerHealthSystem : SystemBase {
                     playerHealthData.UntouchableTimer = playerHealthData.SecondsUntouchable;
                     playerHealthData.Status = PlayerHealthData.PlayerStatus.Alive;
                     beginCommandBuffer.RemoveComponent<DisableRendering>(entityInQueryIndex, entity);
+                    beginCommandBuffer.RemoveComponent<Disabled>(entityInQueryIndex, playerHealthData.ForceField);
+                    translation.Value = float3.zero;
+                    movementData.Direction = float3.zero;
+                    movementData.Forward = float3.zero;
+                    rotation.Value = quaternion.LookRotationSafe(float3.zero, math.up());
                 }
                 else
                 {
@@ -68,6 +69,16 @@ public class PlayerHealthSystem : SystemBase {
                     {
                         playerHealthData.UntouchableTimer -= deltaTime;
                     }
+                }
+                
+                
+                if (playerHealthData.IsUntouchable)
+                {
+                    beginCommandBuffer.RemoveComponent<Disabled>(entityInQueryIndex, playerHealthData.ForceField);
+                }
+                else
+                {
+                    beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerHealthData.ForceField);
                 }
             }
 

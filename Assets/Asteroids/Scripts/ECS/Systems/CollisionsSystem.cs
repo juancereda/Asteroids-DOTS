@@ -42,19 +42,32 @@ public class CollisionsSystem : JobComponentSystem
             //
             if (AllAsteroidsData.HasComponent(entityA) && AllProjectiles.HasComponent(entityB))
             {
-                CollisionBetweenAsteroidAndProjectile(ref EntityCommandBuffer, 
-                    asteroidSize: AllAsteroidsData[entityA].Size, 
-                    asteroidPosition: AllTranslationData[entityA].Value, 
-                    projectile: entityB, 
-                    asteroid: entityA);
+                Entity asteroidDestroyedData = EntityCommandBuffer.CreateEntity();
+                EntityCommandBuffer.AddComponent(asteroidDestroyedData,
+                    new AsteroidDestroyedData
+                    {
+                        Size = AllAsteroidsData[entityA].Size,
+                        Position = AllTranslationData[entityA].Value
+                    });
+                
+                EntityCommandBuffer.DestroyEntity(entityA); // Destroying Asteroid
+                EntityCommandBuffer.DestroyEntity(entityB); // Destroying Projectile
+                return;
             }
-            else if (AllAsteroidsData.HasComponent(entityB) && AllProjectiles.HasComponent(entityA))
+            
+            if (AllAsteroidsData.HasComponent(entityB) && AllProjectiles.HasComponent(entityA))
             {
-                CollisionBetweenAsteroidAndProjectile(ref EntityCommandBuffer, 
-                    asteroidSize: AllAsteroidsData[entityA].Size, 
-                    asteroidPosition: AllTranslationData[entityA].Value, 
-                    projectile: entityA, 
-                    asteroid: entityB);
+                Entity asteroidDestroyedData = EntityCommandBuffer.CreateEntity();
+                EntityCommandBuffer.AddComponent(asteroidDestroyedData,
+                    new AsteroidDestroyedData
+                    {
+                        Size = AllAsteroidsData[entityB].Size,
+                        Position = AllTranslationData[entityB].Value
+                    });
+                
+                EntityCommandBuffer.DestroyEntity(entityB); // Destroying Asteroid
+                EntityCommandBuffer.DestroyEntity(entityA); // Destroying Projectile
+                return;
             }
             
             
@@ -62,44 +75,20 @@ public class CollisionsSystem : JobComponentSystem
             //
             if (AllAsteroidsData.HasComponent(entityA) && AllPlayersHealthData.HasComponent(entityB))
             {
-                CollisionBetweenAsteroidAndPlayer(ref EntityCommandBuffer, ref AllPlayersHealthData, player: entityB);
-            }
-            else if (AllAsteroidsData.HasComponent(entityB) && AllPlayersHealthData.HasComponent(entityA))
-            {
-                CollisionBetweenAsteroidAndPlayer(ref EntityCommandBuffer, ref AllPlayersHealthData, player: entityA);
-            }
-            
-            
-
-            // - Local methods section -
-            static void CollisionBetweenAsteroidAndProjectile(
-                ref EntityCommandBuffer commandBuffer, 
-                int asteroidSize,
-                float3 asteroidPosition,
-                Entity projectile, 
-                Entity asteroid)
-            {
-                Entity asteroidDestroyed = commandBuffer.CreateEntity();
-                commandBuffer.AddComponent(asteroidDestroyed,
-                    new AsteroidDestroyedData
-                    {
-                        Size = asteroidSize,
-                        Position = asteroidPosition
-                    });
-                
-                commandBuffer.DestroyEntity(asteroid); // Destroying Asteroid
-                commandBuffer.DestroyEntity(projectile); // Destroying Projectile
-            }
-            
-            static void CollisionBetweenAsteroidAndPlayer(
-                ref EntityCommandBuffer commandBuffer,
-                ref ComponentDataFromEntity<PlayerHealthData> allPlayersHealthData,
-                Entity player)
-            {
-                if (!allPlayersHealthData[player].IsUntouchable)
+                if (!AllPlayersHealthData[entityB].IsUntouchable)
                 {
-                    commandBuffer.AddComponent(player, new PlayerGotHitData());
+                    EntityCommandBuffer.AddComponent(entityB, new PlayerGotHitData());
                 }
+                return;
+            }
+            
+            if (AllAsteroidsData.HasComponent(entityB) && AllPlayersHealthData.HasComponent(entityA))
+            {
+                if (!AllPlayersHealthData[entityA].IsUntouchable)
+                {
+                    EntityCommandBuffer.AddComponent(entityA, new PlayerGotHitData());
+                }
+                return;
             }
         }
     }

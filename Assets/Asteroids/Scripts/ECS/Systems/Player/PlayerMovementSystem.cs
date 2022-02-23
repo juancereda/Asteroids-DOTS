@@ -24,8 +24,11 @@ public class PlayerMovementSystem : SystemBase
             in PlayerHealthData playerHealthData) =>
         {
             if (playerHealthData.Status == PlayerHealthData.PlayerStatus.Respawning)
+            {
+                beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
                 return;
-            
+            }
+
             if (playerMovementData.InputRotation != 0f)
             {
                 quaternion oldRotation = rotation.Value;

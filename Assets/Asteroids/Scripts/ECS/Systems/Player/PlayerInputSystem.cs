@@ -5,7 +5,15 @@ public class PlayerInputSystem : SystemBase {
 
     protected override void OnUpdate() {
         Entities.ForEach((ref ShootingData shootingData, ref PlayerMovementData playerMovementData,
-            ref InputData inputData) => {
+            ref InputData inputData, in PlayerHealthData playerHealthData) => {
+            
+            if (playerHealthData.Status == PlayerHealthData.PlayerStatus.Respawning)
+            {
+                playerMovementData.InputRotation = 0f;
+                playerMovementData.ThrustersOn = false;
+                shootingData.IsShooting = false;
+                return;
+            }
             
             bool leftKeyPressed = Input.GetKey(inputData.LeftKey);
             bool rightKeyPressed = Input.GetKey(inputData.RightKey);

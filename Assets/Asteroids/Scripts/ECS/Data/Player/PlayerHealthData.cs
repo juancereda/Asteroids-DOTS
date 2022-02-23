@@ -10,6 +10,7 @@ public struct PlayerHealthData : IComponentData
     public PlayerStatus Status;
     public bool AsteroidCollision;
     public bool IsUntouchable;
+    public Entity ForceField;
 
     public enum PlayerStatus
     {
