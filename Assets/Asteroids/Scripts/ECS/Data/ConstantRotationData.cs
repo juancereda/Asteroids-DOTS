@@ -2,9 +2,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 [GenerateAuthoringComponent]
-public struct MovementData : IComponentData
+public struct ConstantRotationData : IComponentData
 {
-    public float3 Direction;
+    public float3 Angle;
     public float Speed;
-    public float3 Forward;
 }

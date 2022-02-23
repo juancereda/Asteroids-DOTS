@@ -1,12 +1,14 @@
 using UnityEngine;
 using Unity.Entities;
+using Unity.Mathematics;
 
 [GenerateAuthoringComponent]
 public struct InputData : IComponentData
 {
-    public KeyCode UpKey;
-    public KeyCode DownKey;
     public KeyCode LeftKey;
     public KeyCode RightKey;
     public KeyCode ShootKey;
+    public KeyCode ThrustersKey;
+
+    public float3 ProcessedDirection;
 }

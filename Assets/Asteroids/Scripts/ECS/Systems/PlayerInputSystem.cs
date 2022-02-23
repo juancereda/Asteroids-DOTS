@@ -1,20 +1,26 @@
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerInputSystem : SystemBase {
 
     protected override void OnUpdate() {
-        Entities.ForEach((ref MovementData movementData, in InputData inputData) => {
-
-            bool upKeyPressed = Input.GetKey(inputData.UpKey);
-            bool downKeyPressed = Input.GetKey(inputData.DownKey);
+        Entities.ForEach((ref ShootingData shootingData, ref PlayerMovementData playerMovementData,
+            ref InputData inputData) => {
+            
             bool leftKeyPressed = Input.GetKey(inputData.LeftKey);
             bool rightKeyPressed = Input.GetKey(inputData.RightKey);
+            bool shootingKeyPressed = Input.GetKey(inputData.ShootKey);
+            bool thrustersKeyPressed = Input.GetKey(inputData.ThrustersKey);
 
-            movementData.Direction.x = rightKeyPressed ? 1.0f : 0.0f;
-            movementData.Direction.x -= leftKeyPressed ? 1.0f : 0.0f;
-            movementData.Direction.z = upKeyPressed ? 1.0f : 0.0f;
-            movementData.Direction.z -= downKeyPressed ? 1.0f : 0.0f;
+            float inputRotation = 0f;
+            inputRotation = rightKeyPressed ? 1.0f : 0.0f;
+            inputRotation += leftKeyPressed ? -1.0f : 0.0f;
+
+            playerMovementData.InputRotation = inputRotation;
+            playerMovementData.ThrustersOn = thrustersKeyPressed;
+
+            shootingData.IsShooting = shootingKeyPressed;
 
         }).Run();
     }

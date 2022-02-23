@@ -14,6 +14,5 @@ public class MoveForwardSystem : SystemBase
             position.Value += normalizedDirection * movementData.Speed * deltaTime;
 
         }).ScheduleParallel();
-
     }
 }

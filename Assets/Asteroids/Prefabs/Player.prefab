@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 3596920773444867915}
   - component: {fileID: 3596920773444867909}
   - component: {fileID: 3596920773444867914}
+  - component: {fileID: 400631627396870335}
+  - component: {fileID: 6964132642420423782}
   - component: {fileID: 3596920773444867913}
   - component: {fileID: 3596920773444867912}
   m_Layer: 0
@@ -60,11 +62,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a793488d245d61c41a2b20ed6d99a0cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UpKey: 119
-  DownKey: 115
   LeftKey: 97
   RightKey: 100
-  ShootKey: 0
+  ShootKey: 32
+  ThrustersKey: 119
+  ProcessedDirection:
+    x: 0
+    y: 0
+    z: 0
 --- !u!114 &3596920773444867914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,7 +87,41 @@ MonoBehaviour:
     y: 0
     z: 0
   Speed: 15
-  RotationSpeed: 0.25
+  Forward:
+    x: 0
+    y: 0
+    z: 0
+--- !u!114 &400631627396870335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3596920773444867908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74002196fd32be54d8d4f49a692863e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsShooting: 0
+  TimeToShoot: 0
+  ReloadTime: 0.3
+  ProjectileSpeed: 45
+--- !u!114 &6964132642420423782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3596920773444867908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce4f6c9f747804c4f993c5469862a31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RotationSpeed: 3
+  InputRotation: 0
+  ThrustersOn: 0
 --- !u!23 &3596920773444867913
 MeshRenderer:
   m_ObjectHideFlags: 0

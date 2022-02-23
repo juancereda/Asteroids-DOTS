@@ -35,11 +35,14 @@ public class AsteroidsSpawnerSystem : SystemBase
                     new MovementData
                     {
                         Direction = math.normalizesafe( new float3(_random.NextFloat(-1f, 1f),0.0f,_random.NextFloat(-1f, 1f))),
+                        Speed = 4.3f - asteroidSize
+                    });
+                
+                EntityManager.SetComponentData(newAsteroid, 
+                    new ConstantRotationData()
+                    {
                         Speed = 4.3f - asteroidSize,
-                        FaceDirectionEnabled = false, 
-                        RandomRotationEnabled = true, 
-                        RotationAngle = new float3(_random.NextFloat(-1f, 1f),_random.NextFloat(-1f, 1f),_random.NextFloat(-1f, 1f)),
-                        RotationSpeed = 0.5f
+                        Angle = new float3(_random.NextFloat(0f, 1f),0f,_random.NextFloat(0f, 1f))
                     });
             }
             
