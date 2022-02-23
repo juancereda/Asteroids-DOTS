@@ -21,9 +21,9 @@ public class PlayerMovementSystem : SystemBase
             ref Rotation rotation,
             ref MovementData movementData,
             in PlayerMovementData playerMovementData,
-            in PlayerHealthData playerHealthData) =>
+            in PlayerBehaviourData playerBehaviourData) =>
         {
-            if (playerHealthData.Status == PlayerHealthData.PlayerStatus.Respawning)
+            if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Respawning)
             {
                 beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
                 return;

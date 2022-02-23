@@ -2,9 +2,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
-using UnityEngine;
 
-public class PlayerHealthSystem : SystemBase {
+public class PlayerBehaviourSystem : SystemBase {
 
     private BeginInitializationEntityCommandBufferSystem _beginInitEntityCommandBufferSystem;
     
@@ -20,12 +19,12 @@ public class PlayerHealthSystem : SystemBase {
         
         
         Entities.WithAny<PlayerGotHitData>().
-            ForEach((Entity entity, int entityInQueryIndex, ref PlayerHealthData playerHealthData) =>
+            ForEach((Entity entity, int entityInQueryIndex, ref PlayerBehaviourData playerBehaviourData) =>
         {
-            if (playerHealthData.Status == PlayerHealthData.PlayerStatus.Alive)
+            if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Alive)
             {
-                playerHealthData.Status = PlayerHealthData.PlayerStatus.Respawning;
-                playerHealthData.RespawnTimer = playerHealthData.SecondsToRespawn;
+                playerBehaviourData.Status = PlayerBehaviourData.PlayerStatus.Respawning;
+                playerBehaviourData.RespawnTimer = playerBehaviourData.SecondsToRespawn;
 
                 beginCommandBuffer.AddComponent<DisableRendering>(entityInQueryIndex, entity);
             }
@@ -35,18 +34,18 @@ public class PlayerHealthSystem : SystemBase {
         
         
         
-        Entities.ForEach((Entity entity, int entityInQueryIndex, ref PlayerHealthData playerHealthData,
+        Entities.ForEach((Entity entity, int entityInQueryIndex, ref PlayerBehaviourData playerBehaviourData,
             ref Translation translation, ref MovementData movementData, ref Rotation rotation) => {
 
-            if (playerHealthData.Status == PlayerHealthData.PlayerStatus.Respawning)
+            if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Respawning)
             {
-                if (playerHealthData.RespawnTimer <= 0f)
+                if (playerBehaviourData.RespawnTimer <= 0f)
                 {
-                    playerHealthData.IsUntouchable = true;
-                    playerHealthData.UntouchableTimer = playerHealthData.SecondsUntouchable;
-                    playerHealthData.Status = PlayerHealthData.PlayerStatus.Alive;
+                    playerBehaviourData.IsUntouchable = true;
+                    playerBehaviourData.UntouchableTimer = playerBehaviourData.SecondsUntouchable;
+                    playerBehaviourData.Status = PlayerBehaviourData.PlayerStatus.Alive;
                     beginCommandBuffer.RemoveComponent<DisableRendering>(entityInQueryIndex, entity);
-                    beginCommandBuffer.RemoveComponent<Disabled>(entityInQueryIndex, playerHealthData.ForceField);
+                    beginCommandBuffer.RemoveComponent<Disabled>(entityInQueryIndex, playerBehaviourData.ForceField);
                     translation.Value = float3.zero;
                     movementData.Direction = float3.zero;
                     movementData.Forward = float3.zero;
@@ -54,31 +53,31 @@ public class PlayerHealthSystem : SystemBase {
                 }
                 else
                 {
-                    playerHealthData.RespawnTimer -= deltaTime;
+                    playerBehaviourData.RespawnTimer -= deltaTime;
                 }
             }
             else
             {
-                if (playerHealthData.IsUntouchable)
+                if (playerBehaviourData.IsUntouchable)
                 {
-                    if (playerHealthData.UntouchableTimer <= 0f)
+                    if (playerBehaviourData.UntouchableTimer <= 0f)
                     {
-                        playerHealthData.IsUntouchable = false;
+                        playerBehaviourData.IsUntouchable = false;
                     }
                     else
                     {
-                        playerHealthData.UntouchableTimer -= deltaTime;
+                        playerBehaviourData.UntouchableTimer -= deltaTime;
                     }
                 }
                 
                 
-                if (playerHealthData.IsUntouchable)
+                if (playerBehaviourData.IsUntouchable)
                 {
-                    beginCommandBuffer.RemoveComponent<Disabled>(entityInQueryIndex, playerHealthData.ForceField);
+                    beginCommandBuffer.RemoveComponent<Disabled>(entityInQueryIndex, playerBehaviourData.ForceField);
                 }
                 else
                 {
-                    beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerHealthData.ForceField);
+                    beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerBehaviourData.ForceField);
                 }
             }
 

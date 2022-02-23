@@ -135,7 +135,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  Speed: 4
+  Speed: 3
   Forward:
     x: 0
     y: 0
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4f6c9f747804c4f993c5469862a31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThrustersForce: 5
+  ThrustersForce: 3
   RotationSpeed: 3
   InputRotation: 0
   ThrustersOn: 0

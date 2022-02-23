@@ -26,7 +26,7 @@ public class CollisionsSystem : JobComponentSystem
     [BurstCompile]
     struct CollisionsSystemJob : ITriggerEventsJob
     {
-        [ReadOnly] public ComponentDataFromEntity<PlayerHealthData> AllPlayersHealthData;
+        [ReadOnly] public ComponentDataFromEntity<PlayerBehaviourData> AllPlayersBehavioursData;
         [ReadOnly] public ComponentDataFromEntity<AsteroidData> AllAsteroidsData;
         [ReadOnly] public ComponentDataFromEntity<ProjectileTag> AllProjectiles;
         [ReadOnly] public ComponentDataFromEntity<Translation> AllTranslationData;
@@ -73,18 +73,18 @@ public class CollisionsSystem : JobComponentSystem
             
             // Collision between Player and Asteroids
             //
-            if (AllAsteroidsData.HasComponent(entityA) && AllPlayersHealthData.HasComponent(entityB))
+            if (AllAsteroidsData.HasComponent(entityA) && AllPlayersBehavioursData.HasComponent(entityB))
             {
-                if (!AllPlayersHealthData[entityB].IsUntouchable)
+                if (!AllPlayersBehavioursData[entityB].IsUntouchable)
                 {
                     EntityCommandBuffer.AddComponent(entityB, new PlayerGotHitData());
                 }
                 return;
             }
             
-            if (AllAsteroidsData.HasComponent(entityB) && AllPlayersHealthData.HasComponent(entityA))
+            if (AllAsteroidsData.HasComponent(entityB) && AllPlayersBehavioursData.HasComponent(entityA))
             {
-                if (!AllPlayersHealthData[entityA].IsUntouchable)
+                if (!AllPlayersBehavioursData[entityA].IsUntouchable)
                 {
                     EntityCommandBuffer.AddComponent(entityA, new PlayerGotHitData());
                 }
@@ -97,7 +97,7 @@ public class CollisionsSystem : JobComponentSystem
     {
         var job = new CollisionsSystemJob();
         job.AllAsteroidsData = GetComponentDataFromEntity<AsteroidData>(true);
-        job.AllPlayersHealthData = GetComponentDataFromEntity<PlayerHealthData>(true);
+        job.AllPlayersBehavioursData = GetComponentDataFromEntity<PlayerBehaviourData>(true);
         job.AllProjectiles = GetComponentDataFromEntity<ProjectileTag>(true);
         job.AllTranslationData = GetComponentDataFromEntity<Translation>(true);
         job.EntityCommandBuffer = _endSimulationCommandBufferSystem.CreateCommandBuffer();

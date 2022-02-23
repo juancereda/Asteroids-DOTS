@@ -5,9 +5,9 @@ public class PlayerInputSystem : SystemBase {
 
     protected override void OnUpdate() {
         Entities.ForEach((ref ShootingData shootingData, ref PlayerMovementData playerMovementData,
-            ref InputData inputData, in PlayerHealthData playerHealthData) => {
+            ref InputData inputData, in PlayerBehaviourData playerBehaviourData) => {
             
-            if (playerHealthData.Status == PlayerHealthData.PlayerStatus.Respawning)
+            if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Respawning)
             {
                 playerMovementData.InputRotation = 0f;
                 playerMovementData.ThrustersOn = false;

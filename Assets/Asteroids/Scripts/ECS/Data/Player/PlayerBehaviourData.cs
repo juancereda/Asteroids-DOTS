@@ -1,7 +1,7 @@
 using Unity.Entities;
 
 [GenerateAuthoringComponent]
-public struct PlayerHealthData : IComponentData
+public struct PlayerBehaviourData : IComponentData
 {
     public float SecondsToRespawn;
     public float SecondsUntouchable;
