@@ -27,7 +27,7 @@ public class ShootingSystem : SystemBase
                     new MovementData{ Direction = movementData.Forward, Speed = shootingData.ProjectileSpeed});
 
                 commandBuffer.SetComponent(entityInQueryIndex, newProjectile, 
-                    new Translation{ Value = translation.Value + (movementData.Forward * 1.04f)});
+                    new Translation{ Value = translation.Value + movementData.Forward * 0.5f});
                 
                 shootingData.TimeToShoot = shootingData.ReloadTime;
             }

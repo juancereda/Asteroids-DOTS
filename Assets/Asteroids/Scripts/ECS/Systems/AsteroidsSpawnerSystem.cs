@@ -61,7 +61,11 @@ public class AsteroidsSpawnerSystem : SystemBase
 
 
                     beginCommandBuffer.SetComponent(entityInQueryIndex, newAsteroid,
-                        new Translation {Value = asteroidDestroyedData.Position});
+                        new Translation
+                        {
+                            Value = asteroidDestroyedData.Position + 
+                                    new float3(random.NextFloat(-0.5f, 0.5f), 0.0f, random.NextFloat(-0.5f, 0.5f))
+                        });
                     beginCommandBuffer.SetComponent(entityInQueryIndex, newAsteroid,
                         new AsteroidData() {Size = asteroidSize});
                     beginCommandBuffer.AddComponent<NonUniformScale>(entityInQueryIndex, newAsteroid);
