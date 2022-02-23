@@ -9,9 +9,7 @@ public class MoveForwardSystem : SystemBase
         float deltaTime = Time.DeltaTime;
 
         Entities.ForEach((ref Translation position, in MovementData movementData) => {
-
-            float3 normalizedDirection = math.normalizesafe(movementData.Direction);
-            position.Value += normalizedDirection * movementData.Speed * deltaTime;
+            position.Value += movementData.Direction * movementData.Speed * deltaTime;
 
         }).ScheduleParallel();
     }

@@ -5,4 +5,5 @@ public struct AsteroidPrefabData : IComponentData
 {
     public Entity Prefab;
     public int MaxSize;
+    public int SpawnTimer;
 }
