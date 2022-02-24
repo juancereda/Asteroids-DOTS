@@ -6,14 +6,14 @@ public class PlayerInputSystem : SystemBase
     protected override void OnUpdate()
     {
         Entities.WithAny<PlayerTag>()
-            .ForEach((ref ShootingData shootingData, ref PlayerMovementData playerMovementData,
+            .ForEach((ref PlayerMovementData playerMovementData,
                 ref InputData inputData, ref PlayerBehaviourData playerBehaviourData) =>
             {
                 if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Respawning)
                 {
                     playerMovementData.InputRotation = 0f;
                     playerMovementData.ThrustersOn = false;
-                    shootingData.IsShooting = false;
+                    playerBehaviourData.IsShooting = false;
                     playerBehaviourData.HyperSpaceTravelActivated = false;
                     return;
                 }
@@ -31,7 +31,7 @@ public class PlayerInputSystem : SystemBase
                 playerMovementData.InputRotation = inputRotation;
                 playerMovementData.ThrustersOn = thrustersKeyPressed;
 
-                shootingData.IsShooting = shootingKeyPressed;
+                playerBehaviourData.IsShooting = shootingKeyPressed;
 
                 if (hyperSpaceTravelPressed)
                 {

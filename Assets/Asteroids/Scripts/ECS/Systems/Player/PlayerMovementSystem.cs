@@ -25,7 +25,8 @@ public class PlayerMovementSystem : SystemBase
                 beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
                 return;
             }
-
+            
+            // Spaceship Rotation
             if (playerMovementData.InputRotation != 0f)
             {
                 quaternion oldRotation = rotation.Value;
@@ -37,9 +38,11 @@ public class PlayerMovementSystem : SystemBase
 
                 rotation.Value = targetRotation;
             }
-
+            
             movementData.Forward = math.forward(rotation.Value);
 
+            
+            // Add speed
             if (playerMovementData.ThrustersOn)
             {
                 movementData.Direction =
@@ -54,6 +57,7 @@ public class PlayerMovementSystem : SystemBase
                 beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
             }
 
+            // Drag
             movementData.Speed -= playerMovementData.Drag * deltaTime;
             movementData.Speed = math.clamp(movementData.Speed, 0f, playerMovementData.MaxSpeed);
 

@@ -15,6 +15,7 @@ public struct PlayerBehaviourData : IComponentData
     public float PowerUpInvulnerableDuration;
     public float PowerUpOneShotDuration;
     public float OneShootTimer;
+    public bool IsShooting;
 
     public enum PlayerStatus
     {

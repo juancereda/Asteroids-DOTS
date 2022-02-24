@@ -1,4 +1,5 @@
 using Unity.Entities;
+using Unity.Mathematics;
 
 [GenerateAuthoringComponent]
 public struct ShootingData : IComponentData
@@ -9,4 +10,5 @@ public struct ShootingData : IComponentData
     public float ReloadTime;
     public float CurrentReloadTime;
     public float ProjectileSpeed;
+    public float3 Direction;
 }

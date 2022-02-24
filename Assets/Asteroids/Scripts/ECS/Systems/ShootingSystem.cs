@@ -17,7 +17,7 @@ public class ShootingSystem : SystemBase
 
         var commandBuffer = _entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
         
-        Entities.ForEach((Entity entity, int entityInQueryIndex, ref ShootingData shootingData,  in MovementData movementData, in Translation translation) =>
+        Entities.ForEach((Entity entity, int entityInQueryIndex, ref ShootingData shootingData, in Translation translation) =>
         {
             if (shootingData.IsShooting && shootingData.TimeToShoot <= 0f)
             {
@@ -25,10 +25,10 @@ public class ShootingSystem : SystemBase
                     shootingData.IsPlayer? projectilePrefabData.PlayerProjectile : projectilePrefabData.EnemyProjectile);
                 
                 commandBuffer.SetComponent(entityInQueryIndex, newProjectile, 
-                    new MovementData{ Direction = movementData.Forward, Speed = shootingData.ProjectileSpeed});
+                    new MovementData{ Direction = shootingData.Direction, Speed = shootingData.ProjectileSpeed});
 
                 commandBuffer.SetComponent(entityInQueryIndex, newProjectile, 
-                    new Translation{ Value = translation.Value + movementData.Forward * 0.5f});
+                    new Translation{ Value = translation.Value + shootingData.Direction * 0.5f});
                 
                 shootingData.TimeToShoot = shootingData.CurrentReloadTime;
             }

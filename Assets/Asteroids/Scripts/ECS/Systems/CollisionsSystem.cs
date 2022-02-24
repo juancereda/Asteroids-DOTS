@@ -15,6 +15,14 @@ public class CollisionsSystem : JobComponentSystem
     private StepPhysicsWorld _stepPhysicsWorld;
 
     private EndSimulationEntityCommandBufferSystem _endSimulationCommandBufferSystem;
+    
+    private enum CollisionTag
+    {
+        Projectile,
+        Asteroid,
+        Player,
+        UFO
+    }
 
     protected override void OnCreate()
     {
@@ -30,6 +38,7 @@ public class CollisionsSystem : JobComponentSystem
         [ReadOnly] public ComponentDataFromEntity<AsteroidData> AllAsteroidsData;
         [ReadOnly] public ComponentDataFromEntity<ProjectileTag> AllProjectiles;
         [ReadOnly] public ComponentDataFromEntity<PowerUpData> AllPowerUpData;
+        [ReadOnly] public ComponentDataFromEntity<UfoBehaviourData> AllUfosBehavioursData;
         [ReadOnly] public ComponentDataFromEntity<Translation> AllTranslations;
 
         public EntityCommandBuffer EntityCommandBuffer;
@@ -38,40 +47,85 @@ public class CollisionsSystem : JobComponentSystem
         {
             Entity entityA = triggerEvent.EntityA;
             Entity entityB = triggerEvent.EntityB;
-
-            // Collision between Asteroids and Projectile
+            
+            
+            // Projectiles collisions
             //
-            if (AllAsteroidsData.HasComponent(entityA) && AllProjectiles.HasComponent(entityB))
+            if (AllProjectiles.HasComponent(entityA))
             {
-                Entity asteroidDestroyedData = EntityCommandBuffer.CreateEntity();
-                EntityCommandBuffer.AddComponent(asteroidDestroyedData,
-                    new AsteroidDestroyedData
-                    {
-                        Size = AllAsteroidsData[entityA].Size,
-                        Position = AllTranslations[entityA].Value
-                    });
+                if (AllAsteroidsData.HasComponent(entityB))
+                {
+                    Entity asteroidDestroyedData = EntityCommandBuffer.CreateEntity();
+                    EntityCommandBuffer.AddComponent(asteroidDestroyedData,
+                        new AsteroidDestroyedData
+                        {
+                            Size = AllAsteroidsData[entityB].Size,
+                            Position = AllTranslations[entityB].Value
+                        });
                 
-                EntityCommandBuffer.DestroyEntity(entityA); // Destroying Asteroid
-                EntityCommandBuffer.DestroyEntity(entityB); // Destroying Projectile
-                return;
-            }
-            
-            if (AllAsteroidsData.HasComponent(entityB) && AllProjectiles.HasComponent(entityA))
-            {
-                Entity asteroidDestroyedData = EntityCommandBuffer.CreateEntity();
-                EntityCommandBuffer.AddComponent(asteroidDestroyedData,
-                    new AsteroidDestroyedData
+                    EntityCommandBuffer.DestroyEntity(entityB); // Destroying Asteroid
+                }
+
+                else if (AllUfosBehavioursData.HasComponent(entityB))
+                {
+                    if (AllUfosBehavioursData[entityB].IsAlive)
                     {
-                        Size = AllAsteroidsData[entityB].Size,
-                        Position = AllTranslations[entityB].Value
-                    });
+                        EntityCommandBuffer.AddComponent(entityB, new GotHitTag());
+                    }
+                }
                 
-                EntityCommandBuffer.DestroyEntity(entityB); // Destroying Asteroid
+                else if (AllPlayersBehavioursData.HasComponent(entityB))
+                {
+                    if (AllPlayersBehavioursData[entityB].Status == PlayerBehaviourData.PlayerStatus.Alive &&
+                        !AllPlayersBehavioursData[entityB].IsUntouchable)
+                    {
+                        EntityCommandBuffer.AddComponent(entityB, new GotHitTag());
+                    }
+                }
+                
                 EntityCommandBuffer.DestroyEntity(entityA); // Destroying Projectile
+
                 return;
             }
             
-            
+            if (AllProjectiles.HasComponent(entityB))
+            {
+                if (AllAsteroidsData.HasComponent(entityA))
+                {
+                    Entity asteroidDestroyedData = EntityCommandBuffer.CreateEntity();
+                    EntityCommandBuffer.AddComponent(asteroidDestroyedData,
+                        new AsteroidDestroyedData
+                        {
+                            Size = AllAsteroidsData[entityA].Size,
+                            Position = AllTranslations[entityA].Value
+                        });
+                
+                    EntityCommandBuffer.DestroyEntity(entityA); // Destroying Asteroid
+                }
+                
+                else if (AllUfosBehavioursData.HasComponent(entityA))
+                {
+                    if (AllUfosBehavioursData[entityA].IsAlive)
+                    {
+                        EntityCommandBuffer.AddComponent(entityA, new GotHitTag());
+                    }
+                }
+                
+                else if (AllPlayersBehavioursData.HasComponent(entityA))
+                {
+                    if (AllPlayersBehavioursData[entityA].Status == PlayerBehaviourData.PlayerStatus.Alive &&
+                        !AllPlayersBehavioursData[entityA].IsUntouchable)
+                    {
+                        EntityCommandBuffer.AddComponent(entityA, new GotHitTag());
+                    }
+                }
+                
+                EntityCommandBuffer.DestroyEntity(entityB); // Destroying Projectile
+
+                return;
+            }
+
+
             // Collision between Player and Asteroids
             //
             if (AllAsteroidsData.HasComponent(entityA) && AllPlayersBehavioursData.HasComponent(entityB))
@@ -79,7 +133,7 @@ public class CollisionsSystem : JobComponentSystem
                 if (AllPlayersBehavioursData[entityB].Status == PlayerBehaviourData.PlayerStatus.Alive &&
                     !AllPlayersBehavioursData[entityB].IsUntouchable)
                 {
-                    EntityCommandBuffer.AddComponent(entityB, new PlayerGotHitData());
+                    EntityCommandBuffer.AddComponent(entityB, new GotHitTag());
                 }
                 return;
             }
@@ -89,7 +143,7 @@ public class CollisionsSystem : JobComponentSystem
                 if (AllPlayersBehavioursData[entityA].Status == PlayerBehaviourData.PlayerStatus.Alive &&
                     !AllPlayersBehavioursData[entityA].IsUntouchable)
                 {
-                    EntityCommandBuffer.AddComponent(entityA, new PlayerGotHitData());
+                    EntityCommandBuffer.AddComponent(entityA, new GotHitTag());
                 }
                 return;
             }
@@ -130,6 +184,7 @@ public class CollisionsSystem : JobComponentSystem
         job.AllProjectiles = GetComponentDataFromEntity<ProjectileTag>(true);
         job.AllTranslations = GetComponentDataFromEntity<Translation>(true);
         job.AllPowerUpData = GetComponentDataFromEntity<PowerUpData>(true);
+        job.AllUfosBehavioursData = GetComponentDataFromEntity<UfoBehaviourData>(true);
         job.EntityCommandBuffer = _endSimulationCommandBufferSystem.CreateCommandBuffer();
 
         JobHandle jobHandle =

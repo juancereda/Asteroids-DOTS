@@ -19,7 +19,7 @@ public class PlayerBehaviourSystem : SystemBase
         
         // Check if the player Got Hit
         //
-        Entities.WithAny<PlayerGotHitData>().ForEach(
+        Entities.WithAny<GotHitTag>().ForEach(
             (Entity entity, int entityInQueryIndex, ref PlayerBehaviourData playerBehaviourData) =>
             {
                 if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Alive)
@@ -31,7 +31,7 @@ public class PlayerBehaviourSystem : SystemBase
                     beginCommandBuffer.AddComponent<DisableRendering>(entityInQueryIndex, entity);
                 }
 
-                beginCommandBuffer.RemoveComponent<PlayerGotHitData>(entityInQueryIndex, entity);
+                beginCommandBuffer.RemoveComponent<GotHitTag>(entityInQueryIndex, entity);
             }).ScheduleParallel();
 
         
@@ -101,9 +101,10 @@ public class PlayerBehaviourSystem : SystemBase
                         playerBehaviourData.UntouchableTimer -= deltaTime;
                     }
                 }
+                
 
                 Random random = new Random((uint)((deltaTime + 1f) * 10000f));
-
+                
                 if (playerBehaviourData.HyperSpaceTravelActivated)
                 {
                     translation.Value = new float3(random.NextFloat(-20f, 20f), 0f, random.NextFloat(-10f, 10f));
@@ -123,6 +124,10 @@ public class PlayerBehaviourSystem : SystemBase
 
                     playerBehaviourData.OneShootTimer -= deltaTime;
                 }
+                else
+                {
+                    shootingData.CurrentReloadTime = shootingData.ReloadTime;
+                }
             }
             
             if (playerBehaviourData.IsUntouchable)
@@ -133,6 +138,9 @@ public class PlayerBehaviourSystem : SystemBase
             {
                 beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerBehaviourData.ForceField);
             }
+
+            shootingData.IsShooting = playerBehaviourData.IsShooting;
+            shootingData.Direction = movementData.Forward;
 
         }).ScheduleParallel();
         
