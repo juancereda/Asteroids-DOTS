@@ -152,8 +152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4f6c9f747804c4f993c5469862a31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThrustersForce: 3
+  ThrustersForce: 17
   RotationSpeed: 3
+  MaxSpeed: 7
+  AccelerationFactor: 0.03
+  Inertia: 0.5
+  Drag: 2.8
   InputRotation: 0
   ThrustersOn: 0
   ThrustersMeshEntity: {fileID: 7435037502839579072}
@@ -192,7 +196,7 @@ MonoBehaviour:
   IsShooting: 0
   TimeToShoot: 0
   ReloadTime: 0.15
-  ProjectileSpeed: 50
+  ProjectileSpeed: 60
 --- !u!114 &456692393047304384
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -46,15 +46,20 @@ public class PlayerMovementSystem : SystemBase
             if (playerMovementData.ThrustersOn)
             {
                 movementData.Direction =
-                    math.normalizesafe(movementData.Direction +
+                    math.normalizesafe((movementData.Direction * movementData.Speed * playerMovementData.Inertia) +
                                        (movementData.Forward * playerMovementData.ThrustersForce * deltaTime));
                 beginCommandBuffer.RemoveComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
+
+                movementData.Speed = math.lerp(movementData.Speed, playerMovementData.MaxSpeed, playerMovementData.AccelerationFactor);
             }
             else
             {
                 beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerMovementData.ThrustersMeshEntity);
             }
-            
+
+            movementData.Speed -= playerMovementData.Drag * deltaTime;
+            movementData.Speed = math.clamp(movementData.Speed, 0f, playerMovementData.MaxSpeed);
+
         }).ScheduleParallel();
         
         _beginInitEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
