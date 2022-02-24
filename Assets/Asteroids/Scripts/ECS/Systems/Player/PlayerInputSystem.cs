@@ -1,34 +1,42 @@
 using Unity.Entities;
 using UnityEngine;
 
-public class PlayerInputSystem : SystemBase {
-
-    protected override void OnUpdate() {
-        Entities.ForEach((ref ShootingData shootingData, ref PlayerMovementData playerMovementData,
-            ref InputData inputData, in PlayerBehaviourData playerBehaviourData) => {
-            
-            if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Respawning)
+public class PlayerInputSystem : SystemBase
+{
+    protected override void OnUpdate()
+    {
+        Entities.WithAny<PlayerTag>()
+            .ForEach((ref ShootingData shootingData, ref PlayerMovementData playerMovementData,
+                ref InputData inputData, ref PlayerBehaviourData playerBehaviourData) =>
             {
-                playerMovementData.InputRotation = 0f;
-                playerMovementData.ThrustersOn = false;
-                shootingData.IsShooting = false;
-                return;
-            }
-            
-            bool leftKeyPressed = Input.GetKey(inputData.LeftKey);
-            bool rightKeyPressed = Input.GetKey(inputData.RightKey);
-            bool shootingKeyPressed = Input.GetKeyDown(inputData.ShootKey);
-            bool thrustersKeyPressed = Input.GetKey(inputData.ThrustersKey);
+                if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Respawning)
+                {
+                    playerMovementData.InputRotation = 0f;
+                    playerMovementData.ThrustersOn = false;
+                    shootingData.IsShooting = false;
+                    playerBehaviourData.HyperSpaceTravelActivated = false;
+                    return;
+                }
 
-            float inputRotation = 0f;
-            inputRotation = rightKeyPressed ? 1.0f : 0.0f;
-            inputRotation += leftKeyPressed ? -1.0f : 0.0f;
+                bool leftKeyPressed = Input.GetKey(inputData.LeftKey);
+                bool rightKeyPressed = Input.GetKey(inputData.RightKey);
+                bool shootingKeyPressed = Input.GetKeyDown(inputData.ShootKey);
+                bool thrustersKeyPressed = Input.GetKey(inputData.ThrustersKey);
+                bool hyperSpaceTravelPressed = Input.GetKeyDown(inputData.HyperSpaceTravelKey);
 
-            playerMovementData.InputRotation = inputRotation;
-            playerMovementData.ThrustersOn = thrustersKeyPressed;
+                float inputRotation = 0f;
+                inputRotation = rightKeyPressed ? 1.0f : 0.0f;
+                inputRotation += leftKeyPressed ? -1.0f : 0.0f;
 
-            shootingData.IsShooting = shootingKeyPressed;
+                playerMovementData.InputRotation = inputRotation;
+                playerMovementData.ThrustersOn = thrustersKeyPressed;
 
-        }).Run();
+                shootingData.IsShooting = shootingKeyPressed;
+
+                if (hyperSpaceTravelPressed)
+                {
+                    playerBehaviourData.HyperSpaceTravelActivated = true;
+                }
+            }).Run();
     }
 }

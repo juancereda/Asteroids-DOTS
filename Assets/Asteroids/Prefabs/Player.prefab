@@ -119,6 +119,8 @@ MonoBehaviour:
   RightKey: 100
   ShootKey: 305
   ThrustersKey: 32
+  UsePowerUpKey: 112
+  HyperSpaceTravelKey: 104
 --- !u!114 &3596920773444867914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,12 +154,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4f6c9f747804c4f993c5469862a31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThrustersForce: 17
+  ThrustersForce: 13
   RotationSpeed: 3
-  MaxSpeed: 7
+  MaxSpeed: 6
   AccelerationFactor: 0.03
-  Inertia: 0.5
-  Drag: 2.8
+  Inertia: 0.4
+  Drag: 3.5
   InputRotation: 0
   ThrustersOn: 0
   ThrustersMeshEntity: {fileID: 7435037502839579072}
@@ -178,9 +180,10 @@ MonoBehaviour:
   RespawnTimer: 0
   UntouchableTimer: 0
   Status: 0
-  AsteroidCollision: 0
   IsUntouchable: 0
   ForceField: {fileID: 5551268739072729161}
+  PowerUpAvailable: 0
+  HyperSpaceTravelActivated: 0
 --- !u!114 &400631627396870335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,7 +351,7 @@ MonoBehaviour:
         Category00: 1
         Category01: 0
         Category02: 1
-        Category03: 0
+        Category03: 1
         Category04: 0
         Category05: 0
         Category06: 0

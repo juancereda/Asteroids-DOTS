@@ -16,12 +16,9 @@ public class PlayerMovementSystem : SystemBase
         float deltaTime = Time.DeltaTime;
         var beginCommandBuffer = _beginInitEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
 
-        Entities.ForEach((Entity entity,
-            int entityInQueryIndex,
-            ref Rotation rotation,
-            ref MovementData movementData,
-            in PlayerMovementData playerMovementData,
-            in PlayerBehaviourData playerBehaviourData) =>
+        Entities.WithAny<PlayerTag>()
+            .ForEach((Entity entity, int entityInQueryIndex, ref Rotation rotation, ref MovementData movementData,
+            in PlayerMovementData playerMovementData, in PlayerBehaviourData playerBehaviourData) =>
         {
             if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Respawning)
             {

@@ -9,4 +9,6 @@ public struct InputData : IComponentData
     public KeyCode RightKey;
     public KeyCode ShootKey;
     public KeyCode ThrustersKey;
+    public KeyCode UsePowerUpKey;
+    public KeyCode HyperSpaceTravelKey;
 }

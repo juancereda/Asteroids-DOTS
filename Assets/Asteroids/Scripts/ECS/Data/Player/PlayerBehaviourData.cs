@@ -8,9 +8,10 @@ public struct PlayerBehaviourData : IComponentData
     public float RespawnTimer;
     public float UntouchableTimer;
     public PlayerStatus Status;
-    public bool AsteroidCollision;
     public bool IsUntouchable;
     public Entity ForceField;
+    public PowerUpData.PowerUpType PowerUpAvailable;
+    public bool HyperSpaceTravelActivated;
 
     public enum PlayerStatus
     {

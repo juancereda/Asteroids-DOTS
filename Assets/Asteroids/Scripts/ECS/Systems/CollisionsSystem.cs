@@ -29,7 +29,8 @@ public class CollisionsSystem : JobComponentSystem
         [ReadOnly] public ComponentDataFromEntity<PlayerBehaviourData> AllPlayersBehavioursData;
         [ReadOnly] public ComponentDataFromEntity<AsteroidData> AllAsteroidsData;
         [ReadOnly] public ComponentDataFromEntity<ProjectileTag> AllProjectiles;
-        [ReadOnly] public ComponentDataFromEntity<Translation> AllTranslationData;
+        [ReadOnly] public ComponentDataFromEntity<PowerUpData> AllPowerUpData;
+        [ReadOnly] public ComponentDataFromEntity<Translation> AllTranslations;
 
         public EntityCommandBuffer EntityCommandBuffer;
         
@@ -47,7 +48,7 @@ public class CollisionsSystem : JobComponentSystem
                     new AsteroidDestroyedData
                     {
                         Size = AllAsteroidsData[entityA].Size,
-                        Position = AllTranslationData[entityA].Value
+                        Position = AllTranslations[entityA].Value
                     });
                 
                 EntityCommandBuffer.DestroyEntity(entityA); // Destroying Asteroid
@@ -62,7 +63,7 @@ public class CollisionsSystem : JobComponentSystem
                     new AsteroidDestroyedData
                     {
                         Size = AllAsteroidsData[entityB].Size,
-                        Position = AllTranslationData[entityB].Value
+                        Position = AllTranslations[entityB].Value
                     });
                 
                 EntityCommandBuffer.DestroyEntity(entityB); // Destroying Asteroid
@@ -75,7 +76,8 @@ public class CollisionsSystem : JobComponentSystem
             //
             if (AllAsteroidsData.HasComponent(entityA) && AllPlayersBehavioursData.HasComponent(entityB))
             {
-                if (!AllPlayersBehavioursData[entityB].IsUntouchable)
+                if (AllPlayersBehavioursData[entityB].Status == PlayerBehaviourData.PlayerStatus.Alive &&
+                    !AllPlayersBehavioursData[entityB].IsUntouchable)
                 {
                     EntityCommandBuffer.AddComponent(entityB, new PlayerGotHitData());
                 }
@@ -84,9 +86,36 @@ public class CollisionsSystem : JobComponentSystem
             
             if (AllAsteroidsData.HasComponent(entityB) && AllPlayersBehavioursData.HasComponent(entityA))
             {
-                if (!AllPlayersBehavioursData[entityA].IsUntouchable)
+                if (AllPlayersBehavioursData[entityA].Status == PlayerBehaviourData.PlayerStatus.Alive &&
+                    !AllPlayersBehavioursData[entityA].IsUntouchable)
                 {
                     EntityCommandBuffer.AddComponent(entityA, new PlayerGotHitData());
+                }
+                return;
+            }
+            
+            
+            // Collision between Player and PowerUps
+            if (AllPowerUpData.HasComponent(entityA) && AllPlayersBehavioursData.HasComponent(entityB))
+            {
+                if (AllPlayersBehavioursData[entityB].Status == PlayerBehaviourData.PlayerStatus.Alive)
+                {
+                    EntityCommandBuffer.AddComponent(entityB, 
+                        new PlayerTookPowerUpData{ Type = AllPowerUpData[entityA].Type});
+
+                    EntityCommandBuffer.DestroyEntity(entityA);
+                }
+                return;
+            }
+            
+            if (AllPowerUpData.HasComponent(entityB) && AllPlayersBehavioursData.HasComponent(entityA))
+            {
+                if (AllPlayersBehavioursData[entityA].Status == PlayerBehaviourData.PlayerStatus.Alive)
+                {
+                    EntityCommandBuffer.AddComponent(entityA, 
+                        new PlayerTookPowerUpData{ Type = AllPowerUpData[entityB].Type});
+                    
+                    EntityCommandBuffer.DestroyEntity(entityB);
                 }
                 return;
             }
@@ -99,7 +128,8 @@ public class CollisionsSystem : JobComponentSystem
         job.AllAsteroidsData = GetComponentDataFromEntity<AsteroidData>(true);
         job.AllPlayersBehavioursData = GetComponentDataFromEntity<PlayerBehaviourData>(true);
         job.AllProjectiles = GetComponentDataFromEntity<ProjectileTag>(true);
-        job.AllTranslationData = GetComponentDataFromEntity<Translation>(true);
+        job.AllTranslations = GetComponentDataFromEntity<Translation>(true);
+        job.AllPowerUpData = GetComponentDataFromEntity<PowerUpData>(true);
         job.EntityCommandBuffer = _endSimulationCommandBufferSystem.CreateCommandBuffer();
 
         JobHandle jobHandle =

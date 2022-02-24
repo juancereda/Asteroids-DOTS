@@ -3,8 +3,8 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 
-public class PlayerBehaviourSystem : SystemBase {
-
+public class PlayerBehaviourSystem : SystemBase
+{
     private BeginInitializationEntityCommandBufferSystem _beginInitEntityCommandBufferSystem;
     
     protected override void OnCreate()
@@ -15,21 +15,34 @@ public class PlayerBehaviourSystem : SystemBase {
     protected override void OnUpdate() {
         float deltaTime = Time.DeltaTime;
         var beginCommandBuffer = _beginInitEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-        
-        
-        
-        Entities.WithAny<PlayerGotHitData>().
-            ForEach((Entity entity, int entityInQueryIndex, ref PlayerBehaviourData playerBehaviourData) =>
-        {
-            if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Alive)
-            {
-                playerBehaviourData.Status = PlayerBehaviourData.PlayerStatus.Respawning;
-                playerBehaviourData.RespawnTimer = playerBehaviourData.SecondsToRespawn;
 
-                beginCommandBuffer.AddComponent<DisableRendering>(entityInQueryIndex, entity);
+        Entities.WithAny<PlayerGotHitData>().ForEach(
+            (Entity entity, int entityInQueryIndex, ref PlayerBehaviourData playerBehaviourData) =>
+            {
+                if (playerBehaviourData.Status == PlayerBehaviourData.PlayerStatus.Alive)
+                {
+                    playerBehaviourData.Status = PlayerBehaviourData.PlayerStatus.Respawning;
+                    playerBehaviourData.RespawnTimer = playerBehaviourData.SecondsToRespawn;
+
+                    beginCommandBuffer.AddComponent<DisableRendering>(entityInQueryIndex, entity);
+                }
+
+                beginCommandBuffer.RemoveComponent<PlayerGotHitData>(entityInQueryIndex, entity);
+            }).Schedule();
+
+
+        Entities.ForEach((Entity entity, int entityInQueryIndex, ref PlayerBehaviourData playerBehaviourData,
+            ref PlayerTookPowerUpData playerTookPowerUpData) =>
+        {
+            playerBehaviourData.PowerUpAvailable = playerTookPowerUpData.Type;
+
+            if (playerTookPowerUpData.Type == PowerUpData.PowerUpType.Shield)
+            {
+                playerBehaviourData.IsUntouchable = true;
+                playerBehaviourData.UntouchableTimer = 6f;
             }
-            
-            beginCommandBuffer.RemoveComponent<PlayerGotHitData>(entityInQueryIndex, entity);
+
+            beginCommandBuffer.RemoveComponent<PlayerTookPowerUpData>(entityInQueryIndex, entity);
         }).Schedule();
         
         
@@ -63,6 +76,11 @@ public class PlayerBehaviourSystem : SystemBase {
                     if (playerBehaviourData.UntouchableTimer <= 0f)
                     {
                         playerBehaviourData.IsUntouchable = false;
+
+                        if (playerBehaviourData.PowerUpAvailable == PowerUpData.PowerUpType.Shield)
+                        {
+                            playerBehaviourData.PowerUpAvailable = PowerUpData.PowerUpType.None;
+                        }
                     }
                     else
                     {
@@ -78,6 +96,14 @@ public class PlayerBehaviourSystem : SystemBase {
                 else
                 {
                     beginCommandBuffer.AddComponent<Disabled>(entityInQueryIndex, playerBehaviourData.ForceField);
+                }
+
+                Random random = new Random((uint)((deltaTime + 1f) * 10000f));
+                
+                if (playerBehaviourData.HyperSpaceTravelActivated)
+                {
+                    translation.Value = new float3(random.NextFloat(-20f, 20f), 0f, random.NextFloat(-10f, 10f));
+                    playerBehaviourData.HyperSpaceTravelActivated = false;
                 }
             }
 
