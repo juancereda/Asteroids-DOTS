@@ -64,6 +64,7 @@ public class CollisionsSystem : JobComponentSystem
                         });
                 
                     EntityCommandBuffer.DestroyEntity(entityB); // Destroying Asteroid
+                    EntityCommandBuffer.DestroyEntity(entityA); // Destroying Projectile
                 }
 
                 else if (AllUfosBehavioursData.HasComponent(entityB))
@@ -71,6 +72,7 @@ public class CollisionsSystem : JobComponentSystem
                     if (AllUfosBehavioursData[entityB].IsAlive)
                     {
                         EntityCommandBuffer.AddComponent(entityB, new GotHitTag());
+                        EntityCommandBuffer.DestroyEntity(entityA); // Destroying Projectile
                     }
                 }
                 
@@ -81,9 +83,8 @@ public class CollisionsSystem : JobComponentSystem
                     {
                         EntityCommandBuffer.AddComponent(entityB, new GotHitTag());
                     }
+                    EntityCommandBuffer.DestroyEntity(entityA); // Destroying Projectile
                 }
-                
-                EntityCommandBuffer.DestroyEntity(entityA); // Destroying Projectile
 
                 return;
             }
@@ -101,6 +102,7 @@ public class CollisionsSystem : JobComponentSystem
                         });
                 
                     EntityCommandBuffer.DestroyEntity(entityA); // Destroying Asteroid
+                    EntityCommandBuffer.DestroyEntity(entityB); // Destroying Projectile
                 }
                 
                 else if (AllUfosBehavioursData.HasComponent(entityA))
@@ -108,6 +110,7 @@ public class CollisionsSystem : JobComponentSystem
                     if (AllUfosBehavioursData[entityA].IsAlive)
                     {
                         EntityCommandBuffer.AddComponent(entityA, new GotHitTag());
+                        EntityCommandBuffer.DestroyEntity(entityB); // Destroying Projectile
                     }
                 }
                 
@@ -118,9 +121,8 @@ public class CollisionsSystem : JobComponentSystem
                     {
                         EntityCommandBuffer.AddComponent(entityA, new GotHitTag());
                     }
+                    EntityCommandBuffer.DestroyEntity(entityB); // Destroying Projectile
                 }
-                
-                EntityCommandBuffer.DestroyEntity(entityB); // Destroying Projectile
 
                 return;
             }

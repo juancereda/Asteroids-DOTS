@@ -16,6 +16,14 @@ public class UfoBehaviourSystem : SystemBase
 
     protected override void OnStartRunning() {
         _player = GetEntityQuery(typeof(PlayerTag)).GetSingletonEntity();
+        var beginCommandBuffer = _beginInitEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+
+        Entities.WithAny<UfoBehaviourData>().ForEach((Entity entity, int entityInQueryIndex) =>
+            {
+                beginCommandBuffer.AddComponent<DisableRendering>(entityInQueryIndex, entity);
+            }).ScheduleParallel();
+        
+        _beginInitEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
     }
     
     protected override void OnUpdate()
