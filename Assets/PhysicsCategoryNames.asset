@@ -15,9 +15,9 @@ MonoBehaviour:
   m_CategoryNames:
   - Asteroid
   - Player
-  - Projectile
+  - PlayerProjectile
   - PowerUp
-  - 
+  - EnemyProjectile
   - 
   - 
   - 

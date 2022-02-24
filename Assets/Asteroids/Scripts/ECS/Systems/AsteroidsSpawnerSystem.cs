@@ -76,7 +76,7 @@ public class AsteroidsSpawnerSystem : SystemBase
                     beginCommandBuffer.SetComponent(entityInQueryIndex, newAsteroid,
                         new MovementData
                         {
-                            Direction = math.normalizesafe(new float3(random.NextFloat(-1f, 1f), 0.0f,
+                            Direction = math.normalizesafe(new float3(i == 0 ? -1f : 1f, 0.0f,
                                 random.NextFloat(-1f, 1f))),
                             Speed = 4.3f - asteroidSize
                         });

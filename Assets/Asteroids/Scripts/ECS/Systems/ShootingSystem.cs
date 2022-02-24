@@ -21,7 +21,8 @@ public class ShootingSystem : SystemBase
         {
             if (shootingData.IsShooting && shootingData.TimeToShoot <= 0f)
             {
-                Entity newProjectile = commandBuffer.Instantiate(entityInQueryIndex, projectilePrefabData.Prefab);
+                Entity newProjectile = commandBuffer.Instantiate(entityInQueryIndex, 
+                    shootingData.IsPlayer? projectilePrefabData.PlayerProjectile : projectilePrefabData.EnemyProjectile);
                 
                 commandBuffer.SetComponent(entityInQueryIndex, newProjectile, 
                     new MovementData{ Direction = movementData.Forward, Speed = shootingData.ProjectileSpeed});
@@ -29,7 +30,7 @@ public class ShootingSystem : SystemBase
                 commandBuffer.SetComponent(entityInQueryIndex, newProjectile, 
                     new Translation{ Value = translation.Value + movementData.Forward * 0.5f});
                 
-                shootingData.TimeToShoot = shootingData.ReloadTime;
+                shootingData.TimeToShoot = shootingData.CurrentReloadTime;
             }
 
             shootingData.TimeToShoot -= deltaTime;

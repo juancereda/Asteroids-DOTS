@@ -176,14 +176,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SecondsToRespawn: 1.5
-  SecondsUntouchable: 2.5
+  SecondsUntouchableAtRespawn: 5
   RespawnTimer: 0
   UntouchableTimer: 0
   Status: 0
   IsUntouchable: 0
   ForceField: {fileID: 5551268739072729161}
-  PowerUpAvailable: 0
+  CurrentPowerUp: 0
   HyperSpaceTravelActivated: 0
+  PowerUpInvulnerableDuration: 10
+  PowerUpOneShotDuration: 8
+  OneShootTimer: 0
 --- !u!114 &400631627396870335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,8 +200,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsShooting: 0
+  IsPlayer: 1
   TimeToShoot: 0
   ReloadTime: 0.15
+  CurrentReloadTime: 0.15
   ProjectileSpeed: 60
 --- !u!114 &456692393047304384
 MonoBehaviour:
@@ -350,9 +355,9 @@ MonoBehaviour:
       m_Value:
         Category00: 1
         Category01: 0
-        Category02: 1
+        Category02: 0
         Category03: 1
-        Category04: 0
+        Category04: 1
         Category05: 0
         Category06: 0
         Category07: 0

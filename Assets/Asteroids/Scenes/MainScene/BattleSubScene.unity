@@ -276,7 +276,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a0be59dfc417a40acb00f0d1ec9496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 471510476828179127, guid: 8a9016d0aa38185428f072ff238b2ed5, type: 3}
+  PlayerProjectile: {fileID: 471510476828179127, guid: 8a9016d0aa38185428f072ff238b2ed5, type: 3}
+  EnemyProjectile: {fileID: 471510476828179127, guid: d43c7e0b18230764186e238f975dfd6e, type: 3}
 --- !u!1 &1965456457
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +323,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OneShotPrefab: {fileID: 7635687872419868646, guid: 174328af82f110a419e39b9654ded8e0, type: 3}
   ShieldPrefab: {fileID: 8363223952714272755, guid: bbabcdaef6648004a8deb2afc04e7328, type: 3}
-  TimeToSpawn: 10
+  TimeToSpawn: 15
 --- !u!4 &1965456460
 Transform:
   m_ObjectHideFlags: 0
