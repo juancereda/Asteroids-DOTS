@@ -1,14 +1,15 @@
 # Asteroids-DOTS
 Unity DOTS Asteroids demo made by Juan Ignacio Cereda.
 
-
+Unity v2020.3.29f1 LTS
 
 ~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
                 SET UP
 ~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
-1) Open the MainScene. 
-2) Set the Game screen Window at full screen, 1920x1080.
-3) Hit Play.
+1) Launch the project. If Unity throws an Error, open it again. There seems to be a bug in this version with some package.
+2) Open the MainScene. 
+3) Set the Game screen Window at full screen, 1920x1080.
+4) Hit Play.
 
 
 ~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
